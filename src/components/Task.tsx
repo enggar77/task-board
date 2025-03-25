@@ -19,7 +19,7 @@ export default function Task({ name, icon, status, description }: Props) {
 					: status === "Won't Do"
 					? "bg-red-1"
 					: "bg-gray-1"
-			} flex justify-between items-center px-4.5 py-3.5 rounded-xl`}
+			} flex justify-between items-center px-4.5 py-3.5 rounded-xl cursor-pointer`}
 		>
 			<div className="max-w-[450px]">
 				<div className="flex gap-6 items-center">

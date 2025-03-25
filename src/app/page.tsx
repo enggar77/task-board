@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Loading from "@/components/Loading";
 import { useRouter } from "next/navigation";
 
@@ -7,6 +7,7 @@ export default function Home() {
 	const router = useRouter();
 	const [isLoading, setLoading] = useState(false);
 	const [error, setError] = useState("");
+	const isInitialMount = useRef(true);
 
 	const createNewBoard = async () => {
 		setError("");
@@ -39,11 +40,14 @@ export default function Home() {
 	};
 
 	useEffect(() => {
-		const savedBoardId = localStorage.getItem("lastBoardId");
-		if (savedBoardId) {
-			router.push(`/board/${savedBoardId}`);
-		} else {
-			createNewBoard();
+		if (isInitialMount.current) {
+			isInitialMount.current = false;
+			const savedBoardId = localStorage.getItem("lastBoardId");
+			if (savedBoardId) {
+				router.push(`/board/${savedBoardId}`);
+			} else {
+				createNewBoard();
+			}
 		}
 	}, [router]);
 
@@ -54,7 +58,7 @@ export default function Home() {
 				<div className="absolute inset-0 flex flex-col gap-4 items-center justify-center">
 					<p className="text-2xl">{error}</p>
 					<button
-						className="bg-black text-white px-4 py-1 rounded-sm cursor-pointer"
+						className="bg-black text-white px-4 py-2 rounded-sm cursor-pointer"
 						onClick={createNewBoard}
 					>
 						Try Again
