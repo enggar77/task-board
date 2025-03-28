@@ -103,12 +103,12 @@ export default function BoardDetails({ board, updateBoard, setHidden }: BoardDet
 				</div>
 			</div>
 
-			<div className="flex flex-col space-y-1 relative">
-				<label className="text-xs text-gray-3 font-medium ml-0.5" htmlFor="url">
+			<div className="space-y-1 relative">
+				<label className="block text-xs text-gray-3 font-semibold ml-0.5" htmlFor="url">
 					Board URL
 				</label>
 				<input
-					className="bg-gray-1 py-2.5 pl-4 pr-12 text-gray-3 rounded-lg focus:outline-blue"
+					className="w-full bg-gray-1 py-2.5 pl-4 pr-12 text-gray-3 rounded-lg focus:outline-blue"
 					type="text"
 					id="url"
 					defaultValue={boardUrl}
@@ -139,7 +139,7 @@ export default function BoardDetails({ board, updateBoard, setHidden }: BoardDet
 			<form onSubmit={handleSubmit(onsubmit)} className="mt-7 grow flex flex-col justify-between">
 				<div className="space-y-7">
 					<div className="space-y-1">
-						<label htmlFor="name" className="block text-xs text-gray-3 font-medium ml-0.5">
+						<label htmlFor="name" className="block text-xs text-gray-3 font-semibold ml-0.5">
 							Title
 						</label>
 						<input
@@ -150,7 +150,7 @@ export default function BoardDetails({ board, updateBoard, setHidden }: BoardDet
 						/>
 					</div>
 					<div className="space-y-1">
-						<label htmlFor="description" className="block text-xs text-gray-3 font-medium ml-0.5">
+						<label htmlFor="description" className="block text-xs text-gray-3 font-semibold ml-0.5">
 							Description
 						</label>
 						<textarea

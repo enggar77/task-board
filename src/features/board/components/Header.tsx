@@ -16,17 +16,29 @@ export default function Header({ board, updateBoard }: HeaderProps) {
 	}
 
 	return (
-		<header className="flex items-start gap-3">
+		<header className="flex items-start gap-3 px-2">
 			<Modal handleHide={handleHide} hidden={hidden}>
-				<BoardDetails board={board} setHidden={setHidden} updateBoard={updateBoard} />
+				<BoardDetails
+					board={board}
+					setHidden={setHidden}
+					updateBoard={updateBoard}
+				/>
 			</Modal>
 
 			<Image src="/Logo.svg" alt="logo svg" width={"40"} height={"40"} />
 			<div className="space-y-2">
 				<div className="flex items-center gap-5">
 					<h1 className="text-4xl">{board.name}</h1>
-					<button className="cursor-pointer w-fit shrink-0" onClick={handleShow}>
-						<Image src="/Edit_duotone.svg" alt="edit svg" width={"24"} height={"24"} />
+					<button
+						className="cursor-pointer w-fit shrink-0"
+						onClick={handleShow}
+					>
+						<Image
+							src="/Edit_duotone.svg"
+							alt="edit svg"
+							width={"24"}
+							height={"24"}
+						/>
 					</button>
 				</div>
 				<p>{board.description}</p>

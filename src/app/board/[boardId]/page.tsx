@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -22,6 +22,31 @@ export default function BoardPage() {
 	const { board, loading, error, updateBoard } = useBoard(boardId);
 	const [hidden, setHidden] = useState(true);
 	const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+
+	// Sort tasks by status priority: In Progress > To Do > Completed > Won't Do
+	const sortedTasks = useMemo(() => {
+		const getStatusPriority = (status: Status): number => {
+			switch (status) {
+				case "In Progress":
+					return 1;
+				case "To Do":
+					return 2;
+				case "Won't Do":
+					return 3;
+				case "Completed":
+					return 4;
+				default:
+					return 5;
+			}
+		};
+
+		return [...(board?.tasks || [])].sort((a, b) => {
+			return (
+				getStatusPriority(a.status as Status) -
+				getStatusPriority(b.status as Status)
+			);
+		});
+	}, [board?.tasks]);
 
 	function handleShow(taskId: string) {
 		setSelectedTaskId(taskId);
@@ -51,11 +76,11 @@ export default function BoardPage() {
 
 	return (
 		<>
-			<div className="mt-16 space-y-8">
+			<div className="mt-16 mb-5 space-y-8">
 				{board && <Header board={board} updateBoard={updateBoard} />}
 
-				<div className="space-y-5 max-h-[450px] overflow-y-scroll">
-					{board?.tasks.map((task) => (
+				<div className="space-y-5 max-h-[450px] overflow-y-scroll px-2 py-4">
+					{sortedTasks.map((task) => (
 						<Task
 							key={task.id}
 							taskId={task.id}
@@ -63,12 +88,13 @@ export default function BoardPage() {
 							icon={task.icon as Icons}
 							name={task.name}
 							handleShow={handleShow}
+							description={task.description || ""}
 						/>
 					))}
 				</div>
 
 				<button
-					className="flex items-center px-4.5 py-3.5 rounded-xl cursor-pointer bg-orange-1 w-full"
+					className="flex items-center px-4.5 py-3.5 rounded-xl cursor-pointer bg-orange-1 w-[calc(100%-16px)] mx-2 shadow-md hover:shadow-lg transition-shadow duration-200"
 					onClick={() => {
 						setHidden(false);
 						setSelectedTaskId(null);
@@ -88,7 +114,12 @@ export default function BoardPage() {
 				</button>
 			</div>
 			<Modal handleHide={handleHide} hidden={hidden}>
-				<TaskDetails />
+				<TaskDetails
+					selectedTaskId={selectedTaskId}
+					board={board}
+					updateBoard={updateBoard}
+					setHidden={setHidden}
+				/>
 			</Modal>
 		</>
 	);

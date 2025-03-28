@@ -21,7 +21,7 @@ export default function Task({
 					: status === "Won't Do"
 					? "bg-red-1"
 					: "bg-gray-1"
-			} flex justify-between items-center px-4.5 py-3.5 rounded-xl cursor-pointer`}
+			} flex justify-between items-center px-4.5 py-3.5 rounded-xl cursor-pointer shadow-md hover:shadow-lg transition-shadow duration-200`}
 			onClick={() => handleShow(taskId)}
 		>
 			<div className="">
