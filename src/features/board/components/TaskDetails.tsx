@@ -1,9 +1,10 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Status, Icons, BoardWithTasks, Task } from "@/types";
+import { Status, Icons, BoardWithTasks } from "@/types";
 import Button from "@/components/ui/Button";
 import { createTask, updateTask, deleteTask } from "@/services/taskService";
+import { Task } from "../../../../prisma/app/generated/prisma/client";
 
 type FormValues = {
 	name: string;
