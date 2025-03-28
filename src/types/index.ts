@@ -1,5 +1,16 @@
 import { Board, Task as TaskType } from "@prisma/client";
 
+export type Task = {
+	name: string;
+	id: string;
+	createdAt: Date;
+	updatedAt: Date;
+	description: string | null;
+	icon: string | null;
+	status: string;
+	boardId: string;
+};
+
 export type Icons = "⏰" | "🚀" | "🚫" | "📚" | "💥" | "☕️";
 export type Status = "In Progress" | "Completed" | "Won't Do" | "To Do";
 

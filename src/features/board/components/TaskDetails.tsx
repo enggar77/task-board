@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Status, Icons, BoardWithTasks } from "@/types";
+import { Status, Icons, BoardWithTasks, Task } from "@/types";
 import Button from "@/components/ui/Button";
 import { createTask, updateTask, deleteTask } from "@/services/taskService";
 
@@ -54,7 +54,9 @@ export default function TaskDetails({
 	// Find the selected task if editing
 	useEffect(() => {
 		if (selectedTaskId && board) {
-			const task = board.tasks.find((task) => task.id === selectedTaskId);
+			const task = board.tasks.find(
+				(task: Task) => task.id === selectedTaskId
+			);
 			if (task) {
 				setValue("name", task.name);
 				setValue("description", task.description || "");
@@ -105,7 +107,7 @@ export default function TaskDetails({
 				// Update the task in the board state
 				updatedBoard = {
 					...board,
-					tasks: board.tasks.map((task) =>
+					tasks: board.tasks.map((task: Task) =>
 						task.id === selectedTaskId
 							? { ...task, ...taskData }
 							: task
@@ -149,7 +151,9 @@ export default function TaskDetails({
 			// Remove the task from the board state
 			const updatedBoard = {
 				...board,
-				tasks: board.tasks.filter((task) => task.id !== selectedTaskId),
+				tasks: board.tasks.filter(
+					(task: Task) => task.id !== selectedTaskId
+				),
 			};
 
 			// Update the board state
