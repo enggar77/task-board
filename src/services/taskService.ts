@@ -1,4 +1,4 @@
-import { Task } from "@prisma/client";
+import { Task } from "../../prisma/app/generated/prisma/client";
 
 export async function fetchTasks(boardId: string): Promise<Task[]> {
 	const response = await fetch(`/api/tasks?boardId=${boardId}`);
