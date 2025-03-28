@@ -1,6 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prismaClient";
-import { Task } from "@prisma/client";
 
 // GET all tasks (optionally filtered by boardId)
 export async function GET(request: NextRequest) {
@@ -40,7 +39,7 @@ export async function POST(request: NextRequest) {
 			);
 		}
 
-		const task: Task = await prisma.task.create({
+		const task = await prisma.task.create({
 			data: {
 				name,
 				description,

@@ -1,6 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prismaClient";
-import { Board } from "@prisma/client";
 
 // GET a board by ID
 export async function GET(
@@ -10,7 +9,7 @@ export async function GET(
 	const { boardId } = await params;
 
 	try {
-		const board: Board | null = await prisma.board.findUnique({
+		const board = await prisma.board.findUnique({
 			where: {
 				id: boardId,
 			},

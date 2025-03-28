@@ -1,6 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
 import { prisma } from "@/lib/prismaClient";
-import { Task } from "@prisma/client";
 
 // GET a task by ID
 export async function GET(
@@ -10,7 +9,7 @@ export async function GET(
 	const { taskId } = await params;
 
 	try {
-		const task: Task | null = await prisma.task.findUnique({
+		const task = await prisma.task.findUnique({
 			where: {
 				id: taskId,
 			},

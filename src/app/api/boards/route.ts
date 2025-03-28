@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prismaClient";
-import { Board } from "@prisma/client";
 
 // CREATE a new board
 export async function POST() {
 	try {
-		const board: Board = await prisma.board.create({
+		const board = await prisma.board.create({
 			data: {
 				tasks: {
 					create: [
