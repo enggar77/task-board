@@ -1,56 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Header from "@/components/Header";
-import Task from "@/components/Task";
-import Loading from "@/components/Loading";
-import { Board, Task as TaskType } from "@prisma/client";
-import { Status } from "@/lib/defenition";
-import Link from "next/link";
+import { useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import { Status, Icons } from "@/types";
+
+// Hooks
+import { useBoard } from "@/hooks/useBoard";
+
+// Components
+import Loading from "@/components/ui/Loading";
+import Modal from "@/components/ui/Modal";
+import Header from "@/features/board/components/Header";
+import Task from "@/features/board/components/Task";
+import TaskDetails from "@/features/board/components/TaskDetails";
 
 export default function BoardPage() {
 	const params = useParams();
-	const [board, setBoard] = useState<Board & { tasks: TaskType[] }>();
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState("");
+	const boardId = params.boardId as string;
+	const { board, loading, error, updateBoard } = useBoard(boardId);
+	const [hidden, setHidden] = useState(true);
+	const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 
-	useEffect(() => {
-		const fetchBoard = async () => {
-			setLoading(true);
-			setError("");
+	function handleShow(taskId: string) {
+		setSelectedTaskId(taskId);
+		setHidden(false);
+	}
 
-			try {
-				const response = await fetch(`/api/boards/${params.boardId}`);
-
-				if (!response.ok) {
-					if (response.status === 404) {
-						localStorage.removeItem("lastBoardId");
-						throw new Error(
-							`Board has been Deleted / Incorrect Board ID`
-						);
-					}
-					throw new Error("Failed to fetch board data.");
-				}
-
-				const data: Board & { tasks: TaskType[] } =
-					await response.json();
-				setBoard(data);
-				// Save the board ID to localStorage
-				if (board?.id) localStorage.setItem("lastBoardId", board.id);
-			} catch (error) {
-				if (error instanceof Error) setError(error.message);
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		if (params.boardId) fetchBoard();
-	}, [params.boardId]);
-
-	const updateBoard = (updatedBoard: Board & { tasks: TaskType[] }) => {
-		setBoard(updatedBoard);
-	};
+	function handleHide() {
+		setHidden(true);
+		setSelectedTaskId(null);
+	}
 
 	if (loading) return <Loading />;
 
@@ -69,19 +50,46 @@ export default function BoardPage() {
 	}
 
 	return (
-		<div className="mt-16 space-y-8">
-			{board && <Header board={board} updateBoard={updateBoard} />}
+		<>
+			<div className="mt-16 space-y-8">
+				{board && <Header board={board} updateBoard={updateBoard} />}
 
-			<div className="space-y-5">
-				{board?.tasks.map((task) => (
-					<Task
-						key={task.id}
-						status={task.status as Status}
-						icon={task.icon ?? undefined}
-						name={task.name}
-					/>
-				))}
+				<div className="space-y-5 max-h-[450px] overflow-y-scroll">
+					{board?.tasks.map((task) => (
+						<Task
+							key={task.id}
+							taskId={task.id}
+							status={task.status as Status}
+							icon={task.icon as Icons}
+							name={task.name}
+							handleShow={handleShow}
+						/>
+					))}
+				</div>
+
+				<button
+					className="flex items-center px-4.5 py-3.5 rounded-xl cursor-pointer bg-orange-1 w-full"
+					onClick={() => {
+						setHidden(false);
+						setSelectedTaskId(null);
+					}}
+				>
+					<div className="flex gap-6 items-center">
+						<div className="bg-orange-3 rounded-xl flex items-center justify-center p-3.5">
+							<Image
+								src="/Add_round_duotone.svg"
+								alt="add task"
+								height={24}
+								width={24}
+							/>
+						</div>
+						<h2 className="text-md font-semibold">Add new task</h2>
+					</div>
+				</button>
 			</div>
-		</div>
+			<Modal handleHide={handleHide} hidden={hidden}>
+				<TaskDetails />
+			</Modal>
+		</>
 	);
 }

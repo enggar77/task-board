@@ -19,10 +19,8 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body
-				className={`${outfit.className} font-normal text-black bg-white antialiased`}
-			>
-				<div className="mx-auto w-[500px] bg-pink">{children}</div>
+			<body className={`${outfit.className} font-normal text-black bg-white antialiased`}>
+				<div className="mx-auto max-w-[500px] bg-pink px-4">{children}</div>
 			</body>
 		</html>
 	);

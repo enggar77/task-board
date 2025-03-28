@@ -1,14 +1,16 @@
+"use client";
+
 import Image from "next/image";
-import { Status } from "@/lib/defenition";
+import { TaskProps } from "@/types";
 
-type Props = {
-	name: string;
-	icon?: string;
-	status: Status;
-	description?: string;
-};
-
-export default function Task({ name, icon, status, description }: Props) {
+export default function Task({
+	taskId,
+	name,
+	icon,
+	status,
+	description,
+	handleShow,
+}: TaskProps) {
 	return (
 		<div
 			className={`${
@@ -20,8 +22,9 @@ export default function Task({ name, icon, status, description }: Props) {
 					? "bg-red-1"
 					: "bg-gray-1"
 			} flex justify-between items-center px-4.5 py-3.5 rounded-xl cursor-pointer`}
+			onClick={() => handleShow(taskId)}
 		>
-			<div className="max-w-[450px]">
+			<div className="">
 				<div className="flex gap-6 items-center">
 					<div className="bg-white rounded-xl flex items-center justify-center w-12 h-12">
 						<p className="text-xl">{icon}</p>
@@ -33,19 +36,17 @@ export default function Task({ name, icon, status, description }: Props) {
 				</p>
 			</div>
 
-			<div
-				className={`${
-					status === "In Progress"
-						? "bg-orange-3"
-						: status === "Completed"
-						? "bg-green-2"
-						: status === "Won't Do"
-						? "bg-red-2"
-						: "bg-gray-3"
-				}
+			{status !== "To Do" && (
+				<div
+					className={`${
+						status === "In Progress"
+							? "bg-orange-3"
+							: status === "Completed"
+							? "bg-green-2"
+							: "bg-red-2"
+					}
 				w-12 h-12 flex items-center justify-center rounded-xl`}
-			>
-				{status !== "To Do" && (
+				>
 					<Image
 						src={
 							status === "In Progress"
@@ -56,12 +57,12 @@ export default function Task({ name, icon, status, description }: Props) {
 								? "/close_ring_duotone.svg"
 								: ""
 						}
-						height={"20"}
-						width={"20"}
+						height={24}
+						width={24}
 						alt={status}
 					/>
-				)}
-			</div>
+				</div>
+			)}
 		</div>
 	);
 }

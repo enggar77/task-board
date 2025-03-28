@@ -1,31 +1,21 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import Loading from "@/components/Loading";
+import Loading from "@/components/ui/Loading";
+import { createBoard } from "@/services/boardService";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
 	const router = useRouter();
-	const [isLoading, setLoading] = useState(false);
+	const [isLoading, setLoading] = useState(true);
 	const [error, setError] = useState("");
 	const isInitialMount = useRef(true);
 
-	const createNewBoard = async () => {
+	const handleCreateNewBoard = async () => {
 		setError("");
 		setLoading(true);
 
 		try {
-			const response = await fetch("/api/boards", {
-				method: "POST",
-				headers: {
-					"Content-type": "application/json",
-				},
-			});
-
-			if (!response.ok) {
-				throw new Error("Failed to create new board");
-			}
-
-			const board = await response.json();
+			const board = await createBoard();
 
 			// save the board ID to localstorage for future visits
 			localStorage.setItem("lastBoardId", board.id);
@@ -46,7 +36,7 @@ export default function Home() {
 			if (savedBoardId) {
 				router.push(`/board/${savedBoardId}`);
 			} else {
-				createNewBoard();
+				handleCreateNewBoard();
 			}
 		}
 	}, [router]);
@@ -59,7 +49,7 @@ export default function Home() {
 					<p className="text-2xl">{error}</p>
 					<button
 						className="bg-black text-white px-4 py-2 rounded-sm cursor-pointer"
-						onClick={createNewBoard}
+						onClick={handleCreateNewBoard}
 					>
 						Try Again
 					</button>
